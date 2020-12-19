@@ -44,17 +44,16 @@ unsigned long int primetest()
 
 		//calculation
 		numberToTest++;
-        fact=0;
-        for(j=1; j<=numberToTest; j++)
-        {
-            if(numberToTest%j==0)
-                fact++;
-        }
-        if(fact==2){
-            printf("%lu\r",numberToTest);
-            lastPrimeFound = numberToTest;
-            continue;
-        }
+		fact=0;
+		for(j=1; j<=numberToTest; j++){
+			if(numberToTest%j==0)
+				fact++;
+		}
+		if(fact==2){
+			printf("%lu\r",numberToTest);
+			lastPrimeFound = numberToTest;
+			continue;
+		}
 	}
 	diff = clock() - start;  // Stop timer.
 	printf("\n");
