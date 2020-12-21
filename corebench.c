@@ -37,7 +37,7 @@ unsigned long int primetest()
 
 	printf("** Prime bench **\n");
 	usleep(1000000);
-	printf("Finding prime numbers for 10 secs...\n");
+	printf("Finding prime numbers...\n");
 
 	clock_t start = clock(), diff;  // Start timer.
 	while(clock()-start < TESTLENGTH){  // Loop char print while no key is pressed.
@@ -50,79 +50,69 @@ unsigned long int primetest()
 				fact++;
 		}
 		if(fact==2){
-			printf("%lu\r",numberToTest);
+			//printf("%lu\r",numberToTest);
 			lastPrimeFound = numberToTest;
 			continue;
 		}
 	}
 	diff = clock() - start;  // Stop timer.
-	printf("\n");
 	usleep(100000);  // Pause to avoid buggy terminal stats output.
 
 	// *** Calculate ***
 	unsigned long int msec = diff * 1000 / CLOCKS_PER_SEC;  // Calculate elapsed time.
-	unsigned long int primescore = numberToTest / 10; // Calculate prime score.
+	unsigned long int primescore = numberToTest / 20; // Calculate prime score.
 
 	printf("Highest prime number found: %lu\n",numberToTest);
 	printf("Elapsed time: %lu seconds %lu milliseconds\n", msec/1000, msec%1000);
 	printf("Bench score: %lu\n",primescore);
-	printf("********\n");
+	printf("************************\n");
 
 	return primescore;
 
 }
 
 
-// MEMTEST ////////////////////////////////////////////////////////////////////////////
+// FLOATTEST ////////////////////////////////////////////////////////////////////////////
 
-unsigned long int memtest()
+unsigned long int floattest()
 {
-	clock_t timer, diff;
+	unsigned long int calculationsMade = 0;
+	float addresult, multresult, divresult, x=0.0001, y=0.001;  // Calculation vars.
 
-	printf("\n** RAM bench **\n");
+	printf("\n** Float bench **\n");
 	usleep(1000000);
+	printf("Doing float calculations...\n");
 
-	printf("Allocating mem area...\n");
-	usleep(1000000);
-	timer = clock();  // Start timer.
-	char *data = malloc(MEMSIZE);  // Dedicate data area.
-	diff = clock() - timer;  // Stop timer.
-	unsigned long int nsec_test1 = diff * 1000000 / CLOCKS_PER_SEC;  // Calculate elapsed time.
-	printf("Time for memory dedication:  %lu nsecs\n", nsec_test1);
-	usleep(1000000);
+	clock_t start = clock(), diff;  // Start timer.
+	while(clock()-start < TESTLENGTH){  // Loop char print while no key is pressed.
 
-	printf("Filling area with zeroes...\n");
-	usleep(1000000);
-	timer = clock();  // Start timer.
-	memset(data,0,MEMSIZE);  // Zero mem area.
-	diff = clock() - timer;  // Stop timer.
-	unsigned long int nsec_test2 = diff * 1000000 / CLOCKS_PER_SEC;  // Calculate elapsed time.
-	printf("Time for zeroing memory area:  %lu nsecs\n", nsec_test2);
-	usleep(1000000);
-
-	printf("Freeing up memory...\n");
-	usleep(1000000);
-	timer = clock();  // Start timer.
-	free(data);  // Free data area.
-	diff = clock() - timer;  // Stop timer.
-	unsigned long int nsec_test3 = diff * 1000000 / CLOCKS_PER_SEC;  // Calculate elapsed time.
-	printf("Time for freeing up memory:  %lu nsecs\n", nsec_test3);
-	usleep(1000000);
+		//calculation
+		addresult = x + y;
+		multresult = x * y;
+		divresult = x / y;
+		x += 0.0001;
+		y += 0.001;
+		++calculationsMade;
+		//printf("add:%f  mult:%f  div:%f  calculations:%lu\r",addresult,multresult,divresult,calculationsMade);
+	}
+	diff = clock() - start;  // Stop timer.
+	usleep(100000);  // Pause to avoid buggy terminal stats output.
 
 	// *** Calculate ***
-	unsigned long int nsec_total = nsec_test1 + nsec_test2 + nsec_test3;
-	unsigned long int memscore = 1000000000 / nsec_total / 10;
+	unsigned long int msec = diff * 1000 / CLOCKS_PER_SEC;  // Calculate elapsed time.
+	unsigned long int floatscore = calculationsMade / 50000; // Calculate float score.
 
-	printf("Total time: %lu nsecs\n",nsec_total);
-	printf("Bench score: %lu\n",memscore);
+	printf("Float combinations calculated: %lu\n",calculationsMade);
+	printf("Elapsed time: %lu seconds %lu milliseconds\n", msec/1000, msec%1000);
+	printf("Bench score: %lu\n",floatscore);
+	printf("************************\n");
 
-	printf("********\n");
+	return floatscore;
 
-	return memscore;
 }
 
 
-// PI /////////////////////////////////////////////////////////////////////////////////
+// PITEST /////////////////////////////////////////////////////////////////////////////
 
 mpz_t tmp1, tmp2, t5, t239, pows;
 unsigned long int noOfDecimals = 0;
@@ -216,7 +206,7 @@ unsigned long int pitest()
 	printf("No of pi decimals found: %lu\n", noOfDecimals);
 	printf("Elapsed time: %lu seconds %lu milliseconds\n", msec/1000, msec%1000);
 	printf("Bench score: %lu\n", piscore);
-	printf("********\n");
+	printf("************************\n");
 
 	return piscore;
 }
@@ -228,14 +218,14 @@ int main()
 	usleep(2000000);
 	unsigned long int primescore = primetest(); // Run prime test.
 	usleep(2000000);
-	unsigned long int memscore = memtest(); // Run mem test.
+	unsigned long int floatscore = floattest(); // Run mem test.
 	usleep(2000000);
 	unsigned long int piscore = pitest(); // Run pi test.
 	usleep(2000000);
-	unsigned long int totalscore = primescore + memscore + piscore;
+	unsigned long int totalscore = primescore + floatscore + piscore;
 	
 	printf("\nPrime score:           %lu\n", primescore);
-	printf("RAM score:             %lu\n", memscore);
+	printf("Float score:           %lu\n", floatscore);
 	printf("PI score:              %lu\n", piscore);
 	printf("Corebench total score: %lu\n", totalscore);
 	return 0;
